@@ -17,11 +17,11 @@ jobs:
       - name: Some Test
         run: ls -all
       - name: Some Test
-        run: cat files/.env
+        run: cat service_config/files/.env
       - name: Some Test
-        run: cat ./files/.env > files/.env
+        run: cat service_config/files/.env > files/.env
       - name: Some Test
-        run: cat ./files/.env
+        run: cat service_config/files/.env
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
