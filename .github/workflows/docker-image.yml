@@ -20,6 +20,10 @@ jobs:
           distribution: "adopt"
       - name: Get current version from pom.xml
         run: echo "X_DOCKER_IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - name: someTest
+        run: ls -all
+      - name: someTest2
+        run: echo "X_DOCKER_IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
       - uses: actions/checkout@v3
       - name: Build the Docker image
         run: bash -c ./service_config/build_image.sh
