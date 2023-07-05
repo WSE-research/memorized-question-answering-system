@@ -1,9 +1,5 @@
 #!/bin/bash
 
-ls -all
-
-cd ../
-
 # build Docker Image
 if ! mvn clean package -DskipTests;
 then
