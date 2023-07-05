@@ -4,7 +4,9 @@ env:
   DOCKER_ORGANISATION_NAME: wseresearch
   DOCKER_IMAGE_NAME: fake-question-answering-system
 
-on: push
+on:
+  push:
+    branches: [ main ]
 
 jobs:
   build:
