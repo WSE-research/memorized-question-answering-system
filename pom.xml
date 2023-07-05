@@ -5,7 +5,7 @@
 
 	<groupId>eu.wse-research</groupId>
 	<artifactId>fake-question-answering-system</artifactId>
-	<version>0.1.24</version>
+	<version>0.1.25</version>
 	<name>Fake Question Answering System</name>
 
 	<parent>
