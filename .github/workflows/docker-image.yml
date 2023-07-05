@@ -21,10 +21,6 @@ jobs:
           distribution: "adopt"
       - name: Get current version from pom.xml
         run: echo "X_DOCKER_IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-      - name: someTest
-        run: ls -all
-      - name: someTest2
-        run: echo "X_DOCKER_IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
       - name: Build the Docker image
         run: bash -c ./service_config/build_image.sh
       - name: Docker Login
@@ -36,6 +32,10 @@ jobs:
         run: docker push $DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:latest
       - name: Push docker image version
         run: docker push "$DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:$X_DOCKER_IMAGE_VERSION"
+      - name: Some Test
+        run: cat files/.env > files/.env
+      - name: Some Test 2
+        run: cat files/.env
       - name: Init update
         uses: WSE-research/docker-service-updater@v0.2.0
         with:
