@@ -18,23 +18,21 @@ jobs:
         with:
           java-version: "11"
           distribution: "adopt"
+      - name: Get current version from pom.xml
+        run: echo "X_VERSION=$(cd backend && mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - name: Build the Docker image
         run: bash -c ./service_config/build_image.sh
       - name: Docker Login
-        if: startsWith(github.ref, 'refs/tags/')
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push latest docker image
-        if: startsWith(github.ref, 'refs/tags/')
         run: docker push $DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:latest
       - name: Push docker image version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: docker push "$DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:${{ github.ref_name }}"
+        run: docker push "$DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:$X_VERSION"
       - name: Init update
-        if: startsWith(github.ref, 'refs/tags/')
         uses: WSE-research/docker-service-updater@v0.2.0
         with:
           updater_host: ${{ secrets.UPDATER_HOST }}
