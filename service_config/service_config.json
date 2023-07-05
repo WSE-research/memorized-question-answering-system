@@ -1,0 +1,16 @@
+{
+  "services": [
+    {
+      "mode": "dockerfile",
+      "port": "40165:40100",
+      "image": "wseresearch/fake-question-answering-system",
+      "tag": "latest",
+      "files": {
+        ".env": ".env"
+      }
+    }
+  ],
+  "ids": {
+    "0": "wseresearch-fake-question-answering-system"
+  }
+}
