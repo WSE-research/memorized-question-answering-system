@@ -25,12 +25,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Tag latest docker image
-        if: startsWith(github.ref, 'refs/tags/')
-        run: docker tag $DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:latest
-      - name: Tag docker image version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: docker tag "$DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:${{ github.ref_name }}"
       - name: Push latest docker image
         if: startsWith(github.ref, 'refs/tags/')
         run: docker push $DOCKER_ORGANISATION_NAME/$DOCKER_IMAGE_NAME:latest
