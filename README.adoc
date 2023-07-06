@@ -1,1 +1,44 @@
+:server: http://demos.swe.htwk-leipzig.de:40165
+
 = Fake Question Answering System
+This is a System that fakes a questn ansering system.
+
+## Configuration
+Before you can start the system you have to configure the following properties in the application.properties file.
+```
+qado.triplestore.url=
+qado.triplestore.database=
+qado.triplestore.username=
+qado.triplestore.password=
+```
+* qado.triplestore.url: The url of the triplestore. For example: http://localhost:7200
+* qado.triplestore.database: The name of the database in the triplestore. For example: qado
+* qado.triplestore.username: The username of the triplestore. For example: admin
+* qado.triplestore.password: The password of the triplestore. For example: admin
+
+You can change the following properties in the application.properties file if necessary.
+```
+qado.question.language=en
+qado.question.knowledgebase=wikidata
+qado.question.user=open
+```
+* qado.question.language: The language of the questions. For example: en
+* qado.question.knowledgebase: The knowledgebase that is used to answer the questions. For example: wikidata
+* qado.question.user: The user that is used to answer the questions. For example: open
+
+## How to ask a question
+You can ask a question by sending a POST request to the following url: `{server}/fake-question-answering-system`.
+The body of the request should contain a JSON object with the following properties:
+```
+{
+    "question": "What is the revenue of IBM?",
+    "number_of_results_items": 5,
+    "dataset": "QALD-9-plus-test-wikidata"
+}
+```
+* question: The question that you want to ask. It musst be a question in the QADO dataset.
+* number_of_results_items: The number of results that you want to receive. It musst be a number bigger 1.
+* dataset: The dataset that you want to use. It musst be a dataset in the QADO database.
+
+## More information
+Swagger UI is available at the following url: `{server}/swagger-ui.html`
