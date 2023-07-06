@@ -1,14 +1,6 @@
 #!/bin/bash
 
 # replace secrets
-if [ -z "$QADO_TRIPLESTORE_URL" ]
-then
-  echo "QADO_TRIPLESTORE_URL is not set. Check your secrets."
-  exit 1
-else
-  sed -i "s/SECRETS_QADO_TRIPLESTORE_URL/$QADO_TRIPLESTORE_URL/g" ./service_config/files/.env
-fi
-
 if [ -z "$QADO_TRIPLESTORE_DATABASE" ]
 then
   echo "QADO_TRIPLESTORE_DATABASE is not set. Check your secrets."
