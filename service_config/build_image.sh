@@ -1,10 +1,5 @@
 #!/bin/bash
 
-echo "$QADO_TRIPLESTORE_URL"
-ehco "some test"
-ehco "${{QADO_TRIPLESTORE_URL}}"
-ehco ${{QADO_TRIPLESTORE_URL}}
-
 # replace secrets
 if [ -z "$QADO_TRIPLESTORE_URL" ]
 then

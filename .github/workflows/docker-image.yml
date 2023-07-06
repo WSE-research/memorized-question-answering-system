@@ -11,6 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      QADO_TRIPLESTORE_URL: ${{ secrets.QADO_TRIPLESTORE_URL }}
+      QADO_TRIPLESTORE_DATABASE: ${{ secrets.QADO_TRIPLESTORE_DATABASE }}
+      QADO_TRIPLESTORE_USERNAME: ${{ secrets.QADO_TRIPLESTORE_USERNAME }}
+      QADO_TRIPLESTORE_PASSWORD: ${{ secrets.QADO_TRIPLESTORE_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v3
