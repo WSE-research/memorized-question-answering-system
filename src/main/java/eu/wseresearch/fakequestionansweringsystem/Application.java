@@ -40,7 +40,6 @@ public class Application {
                                 + "  <li>qado.triplestore.url: " + env.getProperty("qado.triplestore.url") + "</li>" //
                                 + "  <li>qado.triplestore.database: " + env.getProperty("qado.triplestore.database") + "</li>" //
                                 + "  <li>qado.triplestore.username: " + env.getProperty("qado.triplestore.username") + "</li>" //
-                                + "  <li>qado.question.language: " + env.getProperty("qado.question.language") + "</li>" //
                                 + "  <li>qado.question.knowledgebase: " + env.getProperty("qado.question.knowledgebase") + "</li>" //
                                 + "  <li>qado.question.user: " + env.getProperty("qado.question.user") + "</li>" //
                                 + "  <li>cross.origin: " + env.getProperty("cross.origin") + "</li>" //

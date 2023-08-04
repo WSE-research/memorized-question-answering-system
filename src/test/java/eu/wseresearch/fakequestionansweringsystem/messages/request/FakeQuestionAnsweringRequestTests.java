@@ -15,6 +15,9 @@ public class FakeQuestionAnsweringRequestTests {
         fakeQuestionAnsweringRequest.setQuestion("test question");
         assertThrows(IllegalArgumentException.class, fakeQuestionAnsweringRequest::checkRequest);
 
+        fakeQuestionAnsweringRequest.setLanguage("test language");
+        assertThrows(IllegalArgumentException.class, fakeQuestionAnsweringRequest::checkRequest);
+
         fakeQuestionAnsweringRequest.setNumber_of_results_items(9);
         assertThrows(IllegalArgumentException.class, fakeQuestionAnsweringRequest::checkRequest);
 
@@ -27,26 +30,32 @@ public class FakeQuestionAnsweringRequestTests {
         FakeQuestionAnsweringRequest fakeQuestionAnsweringRequest = new FakeQuestionAnsweringRequest();
 
         assertEquals(
-                "FakeQuestionAnsweringRequest {question=\"null\"number_of_results_items=\"null\"dataset=\"null\"}",
+                "FakeQuestionAnsweringRequest {question=\"null\" language=\"null\" number_of_results_items=\"null\" dataset=\"null\"}",
                 fakeQuestionAnsweringRequest.toString()
         );
 
         fakeQuestionAnsweringRequest.setQuestion("test question");
         assertEquals(
-                "FakeQuestionAnsweringRequest {question=\"test question\"number_of_results_items=\"null\"dataset=\"null\"}",
+                "FakeQuestionAnsweringRequest {question=\"test question\" language=\"null\" number_of_results_items=\"null\" dataset=\"null\"}",
+                fakeQuestionAnsweringRequest.toString()
+        );
+
+        fakeQuestionAnsweringRequest.setLanguage("test language");
+        assertEquals(
+                "FakeQuestionAnsweringRequest {question=\"test question\" language=\"test language\" number_of_results_items=\"null\" dataset=\"null\"}",
                 fakeQuestionAnsweringRequest.toString()
         );
 
 
         fakeQuestionAnsweringRequest.setNumber_of_results_items(9);
         assertEquals(
-                "FakeQuestionAnsweringRequest {question=\"test question\"number_of_results_items=\"9\"dataset=\"null\"}",
+                "FakeQuestionAnsweringRequest {question=\"test question\" language=\"test language\" number_of_results_items=\"9\" dataset=\"null\"}",
                 fakeQuestionAnsweringRequest.toString()
         );
 
         fakeQuestionAnsweringRequest.setDataset("test dataset");
         assertEquals(
-                "FakeQuestionAnsweringRequest {question=\"test question\"number_of_results_items=\"9\"dataset=\"test dataset\"}",
+                "FakeQuestionAnsweringRequest {question=\"test question\" language=\"test language\" number_of_results_items=\"9\" dataset=\"test dataset\"}",
                 fakeQuestionAnsweringRequest.toString()
         );
     }

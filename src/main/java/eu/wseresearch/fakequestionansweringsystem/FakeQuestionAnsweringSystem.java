@@ -22,10 +22,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
 @Component
 public class FakeQuestionAnsweringSystem {
@@ -33,7 +30,6 @@ public class FakeQuestionAnsweringSystem {
 
     private final TripleStoreConnector tripleStoreConnector;
     private final Random r = new Random();
-    private final String questionLanguage;
     private final String knowledgebase;
     private final String user;
 
@@ -45,12 +41,10 @@ public class FakeQuestionAnsweringSystem {
 
     public FakeQuestionAnsweringSystem(
             @Autowired TripleStoreConnector tripleStoreConnector,
-            @Value("${qado.question.language}") String questionLanguage,
             @Value("${qado.question.knowledgebase}") String knowledgebase,
             @Value("${qado.question.user}") String user
     ) {
         this.tripleStoreConnector = tripleStoreConnector;
-        this.questionLanguage = questionLanguage;
         this.knowledgebase = knowledgebase;
         this.user = user;
 
@@ -63,25 +57,27 @@ public class FakeQuestionAnsweringSystem {
 
     public JsonObject process(
             String question,
+            String language,
             int numberOfResultsItems,
             String dataset
 
     ) throws DatasetNotExist, IOException, SparqlQueryFailed, QuestionNotExist {
         Resource datasetResource = this.getDatasetByName(dataset);
-        Resource questionResource = this.getQuestionByQuestionText(datasetResource, question);
+        Resource questionResource = this.getQuestionByQuestionText(datasetResource, question, language);
 
-        return this.createAnswer(question, datasetResource, questionResource, numberOfResultsItems);
+        return this.createAnswer(question, language, datasetResource, questionResource, numberOfResultsItems);
     }
 
     public JsonObject createAnswer(
             String question,
+            String language,
             Resource datasetResource,
             Resource questionResource,
             int numberOfResultsItems
     ) throws QuestionNotExist, IOException, SparqlQueryFailed {
         // create list of languages
         ArrayList<String> languages = new ArrayList<>();
-        languages.add(this.questionLanguage);
+        languages.add(language);
 
         // create list of knowledgebases
         ArrayList<String> knowledgebases = new ArrayList<>();
@@ -98,6 +94,9 @@ public class FakeQuestionAnsweringSystem {
             List<FakeAnswerQuery> incorrectAnswers = this.createIncorrectAnswers(datasetResource, questionResource, numberOfResultsItems - 1);
             queries.addAll(incorrectAnswers);
         }
+
+        // shuffle the queries
+        Collections.shuffle(queries);
 
         // create the fake answer
         FakeAnswer fakeAnswer = new FakeAnswer(
@@ -118,6 +117,7 @@ public class FakeQuestionAnsweringSystem {
 
         return new FakeAnswerQuery(
                 sparql,
+                true,
                 confidence,
                 this.knowledgebase,
                 this.user
@@ -128,7 +128,7 @@ public class FakeQuestionAnsweringSystem {
             Resource datasetResource,
             Resource questionResource,
             int numberOfResultsItems
-    ) throws QuestionNotExist, IOException, SparqlQueryFailed {
+    ) throws IOException, SparqlQueryFailed {
         ArrayList<FakeAnswerQuery> fakeAnswerQueries = new ArrayList<>();
         List<String> wrongAnswers = this.getSparqlQueryFromDatasetWithoutCorrectAnswer(datasetResource, questionResource, numberOfResultsItems);
 
@@ -137,6 +137,7 @@ public class FakeQuestionAnsweringSystem {
 
             fakeAnswerQueries.add(new FakeAnswerQuery(
                     wrongAnswerSparql,
+                    false,
                     confidence,
                     this.knowledgebase,
                     this.user
@@ -193,11 +194,12 @@ public class FakeQuestionAnsweringSystem {
 
     public Resource getQuestionByQuestionText(
             Resource dataset,
-            String questionText
+            String questionText,
+            String language
     ) throws IOException, SparqlQueryFailed, QuestionNotExist {
         QuerySolutionMap bindingsForInsert = new QuerySolutionMap();
         bindingsForInsert.add("dataset", dataset);
-        bindingsForInsert.add("questionText", ResourceFactory.createLangLiteral(questionText, this.questionLanguage));
+        bindingsForInsert.add("questionText", ResourceFactory.createLangLiteral(questionText, language));
         String sparql = TripleStoreConnector.readFileFromResourcesWithMap(FILENAME_GET_QUESTION_BY_QUESTIONTEXT, bindingsForInsert);
         ResultSet resultset = this.tripleStoreConnector.select(sparql);
 
@@ -218,11 +220,12 @@ public class FakeQuestionAnsweringSystem {
         QuerySolutionMap bindingsForInsert = new QuerySolutionMap();
         bindingsForInsert.add("questionResource", questionResource);
         String sparql = TripleStoreConnector.readFileFromResourcesWithMap(FILENAME_GET_SPARQL_QUERY_FROM_QUESTION_BY_RESOURCE, bindingsForInsert);
+
         ResultSet resultset = this.tripleStoreConnector.select(sparql);
 
         if (!resultset.hasNext()) {
-            LOGGER.error("Question \"{}\" does not exist", questionResource);
-            throw new QuestionNotExist("Question \"" + questionResource + "\" does not exist");
+            LOGGER.error("Question resource \"{}\" has no SPARQL query", questionResource);
+            throw new QuestionNotExist("Question resource \"" + questionResource + "\" has no SPARQL query");
         }
 
         QuerySolution tupel = resultset.next();
@@ -234,12 +237,13 @@ public class FakeQuestionAnsweringSystem {
             Resource datasetResource,
             Resource correctItemResource,
             int limit
-    ) throws IOException, SparqlQueryFailed, QuestionNotExist {
+    ) throws IOException, SparqlQueryFailed {
         QuerySolutionMap bindingsForInsert = new QuerySolutionMap();
         bindingsForInsert.add("datasetItem", datasetResource);
         bindingsForInsert.add("correctItem", correctItemResource);
         bindingsForInsert.add("limit", ResourceFactory.createTypedLiteral(String.valueOf(limit), XSDDatatype.XSDinteger));
         String sparql = TripleStoreConnector.readFileFromResourcesWithMap(FILENAME_GET_SPARQL_QUERY_FROM_DATASET_WITHOUT_CORRECT_ANSWER, bindingsForInsert);
+
         ResultSet resultset = this.tripleStoreConnector.select(sparql);
 
         // TODO if empty

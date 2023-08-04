@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FakeAnswerQueryTests {
     private String query;
-    private float confidence;
+    private boolean correct;
     private String kb;
     private String user;
     private JsonObject expected;
@@ -21,60 +21,22 @@ public class FakeAnswerQueryTests {
     @BeforeEach
     void init() {
         this.query = "some test query";
-        this.confidence = 0.5f;
+        this.correct = true;
         this.kb = "wikidata";
         this.user = "open";
 
 
         this.expected = JsonParser.parseString(
-                "{\"query\":\"some test query\",\"confidence\":0.5,\"kb\":\"wikidata\",\"user\":\"open\"}"
+                "{\"query\":\"some test query\",\"correct\":true, \"confidence\":0.66,\"kb\":\"wikidata\",\"user\":\"open\"}"
         ).getAsJsonObject();
-    }
-
-    @Test
-    void testConfidenceBetween0And1() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            FakeAnswerQuery fakeAnswerQuery = new FakeAnswerQuery(
-                    this.query,
-                    -0.1F,
-                    this.kb,
-                    this.user
-            );
-        });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            FakeAnswerQuery fakeAnswerQuery = new FakeAnswerQuery(
-                    this.query,
-                    -1.0F,
-                    this.kb,
-                    this.user
-            );
-        });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            FakeAnswerQuery fakeAnswerQuery = new FakeAnswerQuery(
-                    this.query,
-                    1.1F,
-                    this.kb,
-                    this.user
-            );
-        });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            FakeAnswerQuery fakeAnswerQuery = new FakeAnswerQuery(
-                    this.query,
-                    2.0F,
-                    this.kb,
-                    this.user
-            );
-        });
     }
 
     @Test
     void testToJsonObject() {
         FakeAnswerQuery fakeAnswerQuery = new FakeAnswerQuery(
                 this.query,
-                this.confidence,
+                this.correct,
+                0.66f,
                 this.kb,
                 this.user
         );
@@ -86,7 +48,8 @@ public class FakeAnswerQueryTests {
     void testToString() {
         FakeAnswerQuery fakeAnswerQuery = new FakeAnswerQuery(
                 this.query,
-                this.confidence,
+                this.correct,
+                0.66f,
                 this.kb,
                 this.user
         );

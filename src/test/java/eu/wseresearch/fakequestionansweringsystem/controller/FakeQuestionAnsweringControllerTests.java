@@ -81,12 +81,12 @@ class FakeQuestionAnsweringControllerTests {
     @Test
     void testPostProcessErrorResponse() throws Exception {
         when(mockedFakeQuestionAnsweringSystem
-                .process(any(String.class), any(Integer.class), any(String.class)))
+                .process(any(String.class), any(String.class), any(Integer.class), any(String.class)))
                 .thenThrow(new IllegalArgumentException("something went wrong"));
 
         mockMvc.perform(post(ENDPOINT)
                         .header("Content-Type", "application/json")
-                        .content("{\"question\":\"What is the revenue of IBM?\",\"number_of_results_items\":5,\"dataset\":\"QALD-9-plus-test-wikidata\"}"))
+                        .content("{\"question\":\"What is the revenue of IBM?\",\"language\":\"en\",\"number_of_results_items\":5,\"dataset\":\"QALD-9-plus-test-wikidata\"}"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string("java.lang.IllegalArgumentException - something went wrong"));
     }
@@ -96,11 +96,11 @@ class FakeQuestionAnsweringControllerTests {
         JsonObject responseJsonObject = new JsonObject();
         responseJsonObject.addProperty("some", "answer");
 
-        when(mockedFakeQuestionAnsweringSystem.process(any(String.class), any(Integer.class), any(String.class))).thenReturn(responseJsonObject);
+        when(mockedFakeQuestionAnsweringSystem.process(any(String.class), any(String.class), any(Integer.class), any(String.class))).thenReturn(responseJsonObject);
 
         mockMvc.perform(post(ENDPOINT)
                         .header("Content-Type", "application/json")
-                        .content("{\"question\":\"What is the revenue of IBM?\",\"number_of_results_items\":5,\"dataset\":\"QALD-9-plus-test-wikidata\"}"))
+                        .content("{\"question\":\"What is the revenue of IBM?\",\"language\":\"en\",\"number_of_results_items\":5,\"dataset\":\"QALD-9-plus-test-wikidata\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"some\":\"answer\"}"));
     }

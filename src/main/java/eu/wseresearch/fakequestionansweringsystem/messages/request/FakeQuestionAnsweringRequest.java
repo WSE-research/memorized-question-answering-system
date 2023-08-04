@@ -7,6 +7,7 @@ public class FakeQuestionAnsweringRequest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FakeQuestionAnsweringRequest.class);
 
     private String question;
+    private String language;
     private Integer number_of_results_items;
     private String dataset;
 
@@ -16,6 +17,14 @@ public class FakeQuestionAnsweringRequest {
 
     public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public Integer getNumber_of_results_items() {
@@ -44,6 +53,10 @@ public class FakeQuestionAnsweringRequest {
             LOGGER.error("request is invalid: question is null or blank");
             throw new IllegalArgumentException("request is invalid: question is null or blank");
         }
+        if (this.language == null || this.language.isBlank()) {
+            LOGGER.error("request is invalid: language is null or blank");
+            throw new IllegalArgumentException("request is invalid: language is null or blank");
+        }
         if (this.number_of_results_items == null || this.number_of_results_items < 1) {
             LOGGER.error("request is invalid: number_of_results_items is null or less than 1");
             throw new IllegalArgumentException("request is invalid: number_of_results_items is null or less than 1");
@@ -58,6 +71,6 @@ public class FakeQuestionAnsweringRequest {
 
     @Override
     public String toString() {
-        return "FakeQuestionAnsweringRequest {" + "question=\"" + this.question + "\"" + "number_of_results_items=\"" + this.number_of_results_items + "\"" + "dataset=\"" + this.dataset + "\"" + "}";
+        return "FakeQuestionAnsweringRequest {" + "question=\"" + this.question + "\"" + " language=\"" + this.language + "\"" + " number_of_results_items=\"" + this.number_of_results_items + "\"" + " dataset=\"" + this.dataset + "\"" + "}";
     }
 }

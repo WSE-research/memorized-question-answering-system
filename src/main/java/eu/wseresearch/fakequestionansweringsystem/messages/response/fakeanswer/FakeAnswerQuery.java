@@ -8,17 +8,15 @@ public class FakeAnswerQuery {
     private static final Logger LOGGER = LoggerFactory.getLogger(FakeAnswerQuery.class);
 
     private String query;
+    private boolean correct;
     private float confidence;
     private String kb;
     private String user;
 
-    public FakeAnswerQuery(String query, float confidence, String kb, String user) {
-        if (confidence < 0 || confidence > 1) {
-            LOGGER.error("Confidence must be between 0 and 1");
-            throw new IllegalArgumentException("Confidence must be between 0 and 1");
-        }
+    public FakeAnswerQuery(String query, boolean correct, float confidence, String kb, String user) {
 
         this.query = query;
+        this.correct = correct;
         this.confidence = confidence;
         this.kb = kb;
         this.user = user;
@@ -28,6 +26,10 @@ public class FakeAnswerQuery {
         return query;
     }
 
+    public boolean getCorrect() {
+        return correct;
+    }
+    
     public float getConfidence() {
         return confidence;
     }
@@ -47,6 +49,7 @@ public class FakeAnswerQuery {
         JsonObject fakeAnswerQuery = new JsonObject();
 
         fakeAnswerQuery.addProperty("query", this.getQuery());
+        fakeAnswerQuery.addProperty("correct", this.getCorrect());
         fakeAnswerQuery.addProperty("confidence", this.getConfidence());
         fakeAnswerQuery.addProperty("kb", this.getKb());
         fakeAnswerQuery.addProperty("user", this.getUser());

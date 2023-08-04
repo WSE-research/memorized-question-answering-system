@@ -51,13 +51,14 @@ public class FakeQuestionAnsweringController {
             description = "Create a fake answer for a question, form the given request. Using the dataset and the number of results items."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FakeAnswer.class), mediaType = "application/json", examples = {@ExampleObject(name = "What is the revenue of IBM?", description = "Send a request with a request body like: { \"question\": \"What is the revenue of IBM?\", \"number_of_results_items\": 5, \"dataset\": \"QALD-9-plus-test-wikidata\" }", value = "{ \"question\": \"What is the revenue of IBM?\", \"languages\": [ \"en\" ], \"knowledgebases\": [ \"wikidata\" ], \"queries\": [ { \"query\": \" SELECT ?o1 WHERE { <http://www.wikidata.org/entity/Q37156>  <http://www.wikidata.org/prop/direct/P2139>  ?o1 .  }\", \"confidence\": 0.86, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"SELECT ?o1 WHERE { <http://www.wikidata.org/entity/Q214341>  <http://www.wikidata.org/prop/direct/P2196>  ?o1 .  }\", \"confidence\": 0.05, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"PREFIX wdt: <http://www.wikidata.org/prop/direct/> PREFIX wd: <http://www.wikidata.org/entity/> SELECT ( COUNT( DISTINCT ?uri ) AS ?c ) WHERE { ?uri wdt:P112 wd:Q36215 . ?uri wdt:P31/wdt:P279* wd:Q783794 . } \", \"confidence\": 0.34, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"PREFIX wd: <http://www.wikidata.org/entity/> PREFIX wdt: <http://www.wikidata.org/prop/direct/> SELECT ?date WHERE { wd:Q3266236 wdt:P170 ?author . ?author wdt:P570 ?date }\", \"confidence\": 0.01, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"SELECT DISTINCT ?uri WHERE { <http://www.wikidata.org/entity/Q1124023> <http://www.wikidata.org/prop/direct/P559> ?uri}\", \"confidence\": 0.1, \"kb\": \"wikidata\", \"user\": \"open\" } ] }")})}),
+            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FakeAnswer.class), mediaType = "application/json", examples = {@ExampleObject(name = "What is the revenue of IBM?", description = "Send a request with a request body like: { \"question\": \"What is the revenue of IBM?\", \"language\":\"en\", \"number_of_results_items\": 5, \"dataset\": \"QALD-9-plus-test-wikidata\" }", value = "{ \"question\": \"What is the revenue of IBM?\", \"languages\": [ \"en\" ], \"knowledgebases\": [ \"wikidata\" ], \"queries\": [ { \"query\": \" SELECT ?o1 WHERE { <http://www.wikidata.org/entity/Q37156>  <http://www.wikidata.org/prop/direct/P2139>  ?o1 .  }\", \"correct\": true, \"confidence\": 0.86, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"SELECT ?o1 WHERE { <http://www.wikidata.org/entity/Q214341>  <http://www.wikidata.org/prop/direct/P2196>  ?o1 .  }\", \"correct\": false, \"confidence\": 0.05, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"PREFIX wdt: <http://www.wikidata.org/prop/direct/> PREFIX wd: <http://www.wikidata.org/entity/> SELECT ( COUNT( DISTINCT ?uri ) AS ?c ) WHERE { ?uri wdt:P112 wd:Q36215 . ?uri wdt:P31/wdt:P279* wd:Q783794 . } \", \"correct\": false, \"confidence\": 0.34, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"PREFIX wd: <http://www.wikidata.org/entity/> PREFIX wdt: <http://www.wikidata.org/prop/direct/> SELECT ?date WHERE { wd:Q3266236 wdt:P170 ?author . ?author wdt:P570 ?date }\", \"correct\": false, \"confidence\": 0.01, \"kb\": \"wikidata\", \"user\": \"open\" }, { \"query\": \"SELECT DISTINCT ?uri WHERE { <http://www.wikidata.org/entity/Q1124023> <http://www.wikidata.org/prop/direct/P559> ?uri}\", \"correct\": false, \"confidence\": 0.1, \"kb\": \"wikidata\", \"user\": \"open\" } ] }")})}),
             @ApiResponse(responseCode = "201", content = {@Content(schema = @Schema())}, description = "When the created fake answer is null"),
             @ApiResponse(responseCode = "422", content = {@Content(schema = @Schema(), mediaType = "text/plain", examples = {@ExampleObject(name = "Empty Question", description = "Send a request with an empty question", value = "java.lang.IllegalArgumentException - request is invalid: question is null or blank")})}),
             @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})
     })
     @Parameters({
             @Parameter(name = "question", description = "The asked question", required = true, example = "What is the revenue of IBM?"),
+            @Parameter(name = "language", description = "The language of the question", required = true, example = "en"),
             @Parameter(name = "number_of_results_items", description = "Number of answer queries, only the first is one is correct", required = true, example = "5"),
             @Parameter(name = "dataset", description = "The used dataset for question and answers", required = true, example = "QALD-9-plus-test-wikidata")
     })
@@ -78,14 +79,16 @@ public class FakeQuestionAnsweringController {
             // create the fake answer
             JsonObject createdAnswer = this.fakeQuestionAnsweringSystem.process(
                     myFakeQuestionAnsweringRequest.getQuestion(),
+                    myFakeQuestionAnsweringRequest.getLanguage(),
                     myFakeQuestionAnsweringRequest.getNumber_of_results_items(),
                     myFakeQuestionAnsweringRequest.getDataset()
             );
 
             if (createdAnswer == null) {
                 LOGGER.warn(
-                        "createdAnswer was null.\n question: {}\n number of results items: {}\n dataset: {}",
+                        "createdAnswer was null.\n question: {}\n language: {}\n number of results items: {}\n dataset: {}",
                         myFakeQuestionAnsweringRequest.getQuestion(),
+                        myFakeQuestionAnsweringRequest.getLanguage(),
                         myFakeQuestionAnsweringRequest.getNumber_of_results_items(),
                         myFakeQuestionAnsweringRequest.getDataset()
                 );

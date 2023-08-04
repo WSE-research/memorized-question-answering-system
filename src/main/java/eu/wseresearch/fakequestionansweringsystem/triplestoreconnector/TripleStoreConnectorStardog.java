@@ -63,24 +63,24 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
         // c.f.,
         // https://docs.stardog.com/archive/7.5.0/developing/programming-with-stardog/java#using-sesame
         ConnectionPoolConfig poolConfig = ConnectionPoolConfig.using(connectionConfig) //
-                .minPool(minPool).maxPool(maxPool) // for some reason it causes errors while using some specific values
-                .expiration(expirationTime, expirationTimeUnit) //
-                .blockAtCapacity(blockCapacityTime, blockCapacityTimeUnit); //
+                .minPool(this.minPool).maxPool(this.maxPool) // for some reason it causes errors while using some specific values
+                .expiration(this.expirationTime, expirationTimeUnit) //
+                .blockAtCapacity(this.blockCapacityTime, blockCapacityTimeUnit); //
         return poolConfig.create();
     }
 
     @Override
     public void connect() {
-        ConnectionConfiguration connectionConfig = ConnectionConfiguration.to(database)
-                .server(url.toASCIIString()).reasoning(reasoningType)
-                .credentials(username, password);
+        ConnectionConfiguration connectionConfig = ConnectionConfiguration.to(this.database)
+                .server(this.url.toASCIIString()).reasoning(this.reasoningType)
+                .credentials(this.username, this.password);
         this.connectionPool = createConnectionPool(connectionConfig); // creates the Stardog connection pool
     }
 
     @Override
     public ResultSet select(String sparql) throws SparqlQueryFailed {
         try {
-            if (cacheManager == null) {
+            if (this.cacheManager == null) {
                 return execSelect(sparql);
             }
 
@@ -92,25 +92,30 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
 
     @Override
     public void update(String sparql) throws SparqlQueryFailed {
-        try (
-                Connection connection = connectionPool.obtain()
-        ) {
+        Connection connection = this.connectionPool.obtain();
+
+        try {
             UpdateQuery query = connection.update(sparql);
             query.execute();
         } catch (Exception e) {
-            throw new SparqlQueryFailed(sparql, this.url.toString() + this.database, e);
+            throw new SparqlQueryFailed(sparql, this.url.toASCIIString(), e);
         }
+
+
+        connection.close();
     }
 
     private ResultSet execSelect(String sparql) throws SparqlQueryFailed {
         LOGGER.info("no Cache is used");
 
-        Connection connection = connectionPool.obtain();
+        Connection connection = this.connectionPool.obtain();
         Model aModel = SDJenaFactory.createModel(connection);
         Query aQuery = QueryFactory.create(sparql);
 
         try (QueryExecution aExec = QueryExecutionFactory.create(aQuery, aModel)) {
             ResultSet rs = aExec.execSelect();
+            connection.close();
+
             return ResultSetFactory.makeRewindable(rs);
         } catch (Exception e) {
             throw new SparqlQueryFailed(sparql, url.toASCIIString(), e);
@@ -118,7 +123,7 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
     }
 
     private ResultSet execSelectWithCache(String sparql) throws SparqlQueryFailed {
-        Cache cache = cacheManager.getCache(CacheConfig.CACHENAME);
+        Cache cache = this.cacheManager.getCache(CacheConfig.CACHENAME);
         int hashCode = Objects.hash(sparql.hashCode());
 
         // TODO check if cache is not null
