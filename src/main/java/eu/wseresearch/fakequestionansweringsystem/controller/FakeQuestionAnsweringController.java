@@ -56,12 +56,6 @@ public class FakeQuestionAnsweringController {
             @ApiResponse(responseCode = "422", content = {@Content(schema = @Schema(), mediaType = "text/plain", examples = {@ExampleObject(name = "Empty Question", description = "Send a request with an empty question", value = "java.lang.IllegalArgumentException - request is invalid: question is null or blank")})}),
             @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})
     })
-    @Parameters({
-            @Parameter(name = "question", description = "The asked question", required = true, example = "What is the revenue of IBM?"),
-            @Parameter(name = "language", description = "The language of the question", required = true, example = "en"),
-            @Parameter(name = "number_of_results_items", description = "Number of answer queries, only the first is one is correct", required = true, example = "5"),
-            @Parameter(name = "dataset", description = "The used dataset for question and answers", required = true, example = "QALD-9-plus-test-wikidata")
-    })
     @PostMapping(value = ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> indexPost(@RequestBody FakeQuestionAnsweringRequest myFakeQuestionAnsweringRequest) {
         LOGGER.debug("request body: {}", myFakeQuestionAnsweringRequest);
