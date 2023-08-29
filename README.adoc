@@ -21,25 +21,58 @@ You can change the following properties in the application.properties file if ne
 qado.question.knowledgebase=wikidata
 qado.question.user=open
 ```
-* qado.question.language: The language of the questions. For example: en
 * qado.question.knowledgebase: The knowledgebase that is used to answer the questions. For example: wikidata
 * qado.question.user: The user that is used to answer the questions. For example: open
 
 ## How to ask a question
 You can ask a question by sending a POST request to the following url: `{server}/fake-question-answering-system`.
 The body of the request should contain a JSON object with the following properties:
+
+* question: (required) The question that you want to ask. It musst be a question in the QADO dataset.
+* language: (required) The language of the question. It musst be a language in the QADO dataset
+* number_of_results_items: The number of results that you want to receive. If this field is 0 or not in the request the
+system will return all results.
+* dataset: The dataset that you want to use. It musst be a dataset in the QADO database. If this field is not in the
+request the system will use datasets.
+
+BE CAREFUL: If you send a request without `number_of_results_items` and `dataset` (<<Minimum Example>>) the system will
+respond with all possible results. This can take a very long time.
+
+### Full example
 ```
 {
     "question": "What is the revenue of IBM?",
-    "language": "en"
+    "language": "en",
     "number_of_results_items": 5,
     "dataset": "QALD-9-plus-test-wikidata"
 }
 ```
-* question: The question that you want to ask. It musst be a question in the QADO dataset.
-* language: The language of the question. It musst be a language in the QADO dataset
-* number_of_results_items: The number of results that you want to receive. It musst be a number bigger 1.
-* dataset: The dataset that you want to use. It musst be a dataset in the QADO database.
+
+### Minimum Example
+```
+{
+    "question": "What is the revenue of IBM?",
+    "language": "en"
+}
+```
+
+### Example without dataset
+```
+{
+    "question": "What is the revenue of IBM?",
+    "language": "en",
+    "number_of_results_items": 5
+}
+```
+
+### Example without number of results items
+```
+{
+    "question": "What is the revenue of IBM?",
+    "language": "en",
+    "dataset": "QALD-9-plus-test-wikidata"
+}
+```
 
 ## More information
 Swagger UI is available at the following url: `{server}/swagger-ui.html`

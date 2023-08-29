@@ -81,7 +81,7 @@ class FakeQuestionAnsweringControllerTests {
     @Test
     void testPostProcessErrorResponse() throws Exception {
         when(mockedFakeQuestionAnsweringSystem
-                .process(any(String.class), any(String.class), any(Integer.class), any(String.class)))
+                .createAnswer(any(String.class), any(String.class), any(Integer.class), any(String.class)))
                 .thenThrow(new IllegalArgumentException("something went wrong"));
 
         mockMvc.perform(post(ENDPOINT)
@@ -96,7 +96,7 @@ class FakeQuestionAnsweringControllerTests {
         JsonObject responseJsonObject = new JsonObject();
         responseJsonObject.addProperty("some", "answer");
 
-        when(mockedFakeQuestionAnsweringSystem.process(any(String.class), any(String.class), any(Integer.class), any(String.class))).thenReturn(responseJsonObject);
+        when(mockedFakeQuestionAnsweringSystem.createAnswer(any(String.class), any(String.class), any(Integer.class), any(String.class))).thenReturn(responseJsonObject);
 
         mockMvc.perform(post(ENDPOINT)
                         .header("Content-Type", "application/json")

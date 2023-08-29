@@ -6,8 +6,6 @@ import eu.wseresearch.fakequestionansweringsystem.messages.request.FakeQuestionA
 
 import eu.wseresearch.fakequestionansweringsystem.messages.response.fakeanswer.FakeAnswer;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,7 +55,9 @@ public class FakeQuestionAnsweringController {
             @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})
     })
     @PostMapping(value = ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> indexPost(@RequestBody FakeQuestionAnsweringRequest myFakeQuestionAnsweringRequest) {
+    public ResponseEntity<String> indexPost(
+            @RequestBody FakeQuestionAnsweringRequest myFakeQuestionAnsweringRequest
+    ) {
         LOGGER.debug("request body: {}", myFakeQuestionAnsweringRequest);
 
         // check if the request is valid
@@ -71,7 +71,7 @@ public class FakeQuestionAnsweringController {
         // process the request
         try {
             // create the fake answer
-            JsonObject createdAnswer = this.fakeQuestionAnsweringSystem.process(
+            JsonObject createdAnswer = this.fakeQuestionAnsweringSystem.createAnswer(
                     myFakeQuestionAnsweringRequest.getQuestion(),
                     myFakeQuestionAnsweringRequest.getLanguage(),
                     myFakeQuestionAnsweringRequest.getNumber_of_results_items(),
