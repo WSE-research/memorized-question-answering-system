@@ -16,10 +16,13 @@ public class FakeQuestionAnsweringRequestTests {
         assertThrows(IllegalArgumentException.class, fakeQuestionAnsweringRequest::checkRequest);
 
         fakeQuestionAnsweringRequest.setLanguage("test language");
+        assertDoesNotThrow(fakeQuestionAnsweringRequest::checkRequest);
+
+        fakeQuestionAnsweringRequest.setNumber_of_results_items(-9);
         assertThrows(IllegalArgumentException.class, fakeQuestionAnsweringRequest::checkRequest);
 
         fakeQuestionAnsweringRequest.setNumber_of_results_items(9);
-        assertThrows(IllegalArgumentException.class, fakeQuestionAnsweringRequest::checkRequest);
+        assertDoesNotThrow(fakeQuestionAnsweringRequest::checkRequest);
 
         fakeQuestionAnsweringRequest.setDataset("test dataset");
         assertDoesNotThrow(fakeQuestionAnsweringRequest::checkRequest);

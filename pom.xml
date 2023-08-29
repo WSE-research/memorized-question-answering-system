@@ -5,7 +5,7 @@
 
 	<groupId>eu.wse-research</groupId>
 	<artifactId>fake-question-answering-system</artifactId>
-	<version>0.2.1</version>
+	<version>0.3.0</version>
 	<name>Fake Question Answering System</name>
 
 	<parent>
@@ -102,6 +102,20 @@
 			<groupId>com.complexible.stardog.jena</groupId>
 			<artifactId>stardog-jena</artifactId>
 			<version>${stardog.version}</version>
+		</dependency>
+
+		<!-- API, java.xml.bind module -->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.1</version>
 		</dependency>
 	</dependencies>
 

@@ -1,14 +1,19 @@
 package eu.wseresearch.fakequestionansweringsystem.messages.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FakeQuestionAnsweringRequest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FakeQuestionAnsweringRequest.class);
 
+    @Schema(example = "What is the revenue of IBM?", description = "The question to be answered", required = true)
     private String question;
+    @Schema(example = "en", description = "The language of the question", required = true)
     private String language;
+    @Schema(example = "5", description = "The number of results items", required = false)
     private Integer number_of_results_items;
+    @Schema(example = "QALD-9-plus-test-wikidata", description = "The dataset that should be used", required = false)
     private String dataset;
 
     public String getQuestion() {
@@ -57,13 +62,9 @@ public class FakeQuestionAnsweringRequest {
             LOGGER.error("request is invalid: language is null or blank");
             throw new IllegalArgumentException("request is invalid: language is null or blank");
         }
-        if (this.number_of_results_items == null || this.number_of_results_items < 1) {
-            LOGGER.error("request is invalid: number_of_results_items is null or less than 1");
-            throw new IllegalArgumentException("request is invalid: number_of_results_items is null or less than 1");
-        }
-        if (this.dataset == null || this.dataset.isBlank()) {
-            LOGGER.error("request is invalid: dataset is null or blank");
-            throw new IllegalArgumentException("request is invalid: dataset is null or blank");
+        if (this.number_of_results_items != null && this.number_of_results_items < 0) {
+            LOGGER.error("request is invalid: number_of_results_items is less than 0");
+            throw new IllegalArgumentException("request is invalid: number_of_results_items is less than 0");
         }
 
         LOGGER.debug("request is valid");
