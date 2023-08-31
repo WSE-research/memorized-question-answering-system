@@ -74,5 +74,9 @@ respond with all possible results. This can take a very long time.
 }
 ```
 
+## Swagger UI
+The system has a Swagger UI. You can use it to test the system and to see the documentation of the endpoints.
+The Swagger UI is available at the following url: `{server}/swagger-ui/index.html`
+
 ## More information
 Swagger UI is available at the following url: `{server}/swagger-ui.html`

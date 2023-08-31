@@ -5,7 +5,7 @@
 
 	<groupId>eu.wse-research</groupId>
 	<artifactId>fake-question-answering-system</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.1</version>
 	<name>Fake Question Answering System</name>
 
 	<parent>
@@ -20,7 +20,7 @@
 		<stardog.version>[8.0.0,9.0.0)</stardog.version>
 		<springdoc.version>1.6.11</springdoc.version>
 		<log4j.version>2.20.0</log4j.version>
-		<google.guava.version>31.1-jre</google.guava.version>
+		<google.guava.version>[32.0.0,)</google.guava.version>
 		<docker.image.prefix>wseresearch</docker.image.prefix>
 		<docker.image.name>fake-question-answering-system</docker.image.name>
 		<dockerfile-maven-version>1.4.10</dockerfile-maven-version>
