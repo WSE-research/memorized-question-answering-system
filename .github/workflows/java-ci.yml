@@ -9,7 +9,7 @@ jobs:
     steps:
 #      Clone this repository
       - name: Check out this repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: ./this-repository
 
