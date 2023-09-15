@@ -30,7 +30,7 @@ public class FakeQuestionAnsweringSystem {
 
     private final TripleStoreConnector tripleStoreConnector;
     private final Random r = new Random();
-    private final String knowledgebase;
+    private final String knowledgebase = "";
     private final String user;
 
     private String FILENAME_GET_ALL_DATASETS = "/queries/select_dataset_labels.rq";
@@ -44,11 +44,9 @@ public class FakeQuestionAnsweringSystem {
 
     public FakeQuestionAnsweringSystem(
             @Autowired TripleStoreConnector tripleStoreConnector,
-            @Value("${qado.question.knowledgebase}") String knowledgebase,
             @Value("${qado.question.user}") String user
     ) {
         this.tripleStoreConnector = tripleStoreConnector;
-        this.knowledgebase = knowledgebase;
         this.user = user;
 
         TripleStoreConnector.guardNonEmptyFileFromResources(FILENAME_GET_ALL_DATASETS);
@@ -72,7 +70,7 @@ public class FakeQuestionAnsweringSystem {
 
         // create list of knowledgebases
         ArrayList<String> knowledgebases = new ArrayList<>();
-        knowledgebases.add(this.knowledgebase);
+//        knowledgebases.add(this.knowledgebase);
 
         // create list of queries
         ArrayList<FakeAnswerQuery> queries = new ArrayList<>();
