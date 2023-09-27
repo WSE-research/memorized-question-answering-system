@@ -11,4 +11,5 @@ SELECT ?sparqlQuery {
         ?item   qado:hasQuestion    ?questionText .
     }
 }
+ORDER BY RAND()
 LIMIT ?limit

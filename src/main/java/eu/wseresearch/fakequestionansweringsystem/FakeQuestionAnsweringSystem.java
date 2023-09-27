@@ -73,6 +73,25 @@ public class FakeQuestionAnsweringSystem {
 //        knowledgebases.add(this.knowledgebase);
 
         // create list of queries
+        List<FakeAnswerQuery> queries = createAnswerQueries(question, language, numberOfResultsItems, dataset);
+
+        // create the fake answer
+        FakeAnswer fakeAnswer = new FakeAnswer(
+                question,
+                languages,
+                knowledgebases,
+                queries
+        );
+
+        return fakeAnswer.toJsonObject();
+    }
+
+    public List<FakeAnswerQuery> createAnswerQueries(
+            String question,
+            String language,
+            Integer numberOfResultsItems,
+            String dataset
+    ) throws DatasetNotExist, IOException, SparqlQueryFailed, QuestionNotExist {
         ArrayList<FakeAnswerQuery> queries = new ArrayList<>();
 
         Resource datasetResource = null;
@@ -97,15 +116,7 @@ public class FakeQuestionAnsweringSystem {
         // shuffle the queries
         Collections.shuffle(queries);
 
-        // create the fake answer
-        FakeAnswer fakeAnswer = new FakeAnswer(
-                question,
-                languages,
-                knowledgebases,
-                queries
-        );
-
-        return fakeAnswer.toJsonObject();
+        return queries;
     }
 
     public FakeAnswerQuery createCorrectAnswerQuery(
