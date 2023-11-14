@@ -54,20 +54,20 @@ public abstract class TripleStoreConnector {
         if (!sparqlQueryString.contains("\nSELECT ") && !sparqlQueryString.startsWith("SELECT")) {
             if (!sparqlQueryString.contains("\nASK ") && !sparqlQueryString.startsWith("ASK")) {
                 UpdateRequest updateQuery = UpdateFactory.create(pq.toString());
-                LOGGER.info("generated UPDATE query:\n{}", updateQuery.toString());
+                LOGGER.debug("generated UPDATE query:\n{}", updateQuery.toString());
 
                 return updateQuery.toString();
 
             } else {
                 query = QueryFactory.create(pq.toString());
-                LOGGER.info("generated ASK query:\n{}", query.toString());
+                LOGGER.debug("generated ASK query:\n{}", query.toString());
 
                 return query.toString();
             }
 
         } else {
             query = QueryFactory.create(pq.toString());
-            LOGGER.info("generated SELECT query:\n{}", query.toString());
+            LOGGER.debug("generated SELECT query:\n{}", query.toString());
 
             return query.toString();
         }

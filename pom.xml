@@ -1,182 +1,195 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>eu.wse-research</groupId>
-	<artifactId>fake-question-answering-system</artifactId>
-	<version>0.3.3</version>
-	<name>Fake Question Answering System</name>
+    <groupId>eu.wse-research</groupId>
+    <artifactId>fake-question-answering-system</artifactId>
+    <version>0.4.0</version>
+    <name>Fake Question Answering System</name>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.13</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.13</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<properties>
-		<java.version>11</java.version>
-		<stardog.version>[8.0.0,9.0.0)</stardog.version>
-		<springdoc.version>1.6.11</springdoc.version>
-		<log4j.version>2.20.0</log4j.version>
-		<google.guava.version>[32.0.0,)</google.guava.version>
-		<docker.image.prefix>wseresearch</docker.image.prefix>
-		<docker.image.name>fake-question-answering-system</docker.image.name>
-		<dockerfile-maven-version>1.4.10</dockerfile-maven-version>
-	</properties>
+    <properties>
+        <java.version>11</java.version>
+        <stardog.version>[8.0.0,9.0.0)</stardog.version>
+        <springdoc.version>1.6.11</springdoc.version>
+        <log4j.version>2.20.0</log4j.version>
+        <google.guava.version>[32.0.0,)</google.guava.version>
+        <docker.image.prefix>wseresearch</docker.image.prefix>
+        <docker.image.name>fake-question-answering-system</docker.image.name>
+        <dockerfile-maven-version>1.4.10</dockerfile-maven-version>
+    </properties>
 
-	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
-		<!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+        <!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache -->
+        <!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
+        <!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+        <!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
+        <!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-to-slf4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.complexible.stardog/client-http -->
+        <dependency>
+            <groupId>com.complexible.stardog</groupId>
+            <artifactId>client-http</artifactId>
+            <version>${stardog.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.complexible.stardog.jena</groupId>
+            <artifactId>stardog-jena</artifactId>
+            <version>${stardog.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.openlinksw/virt_jena_v3_10 -->
+        <dependency>
+            <groupId>com.openlinksw</groupId>
+            <artifactId>virt_jena_v3_10</artifactId>
+            <version>1.42</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.openlinksw/virtjdbc4 -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+		    <groupId>com.openlinksw</groupId>
+		    <artifactId>virtjdbc4_3</artifactId>
+		    <version>3.123</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache -->
-		<!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
+        <!-- API, java.xml.bind module -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
-		<!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+    </dependencies>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
-		<!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <repositories>
+        <repository>
+            <id>Stardog</id>
+            <name>Stardog Maven Repository</name>
+            <url>https://maven.stardog.com/</url>
+        </repository>
+    </repositories>
 
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-		<!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
-		<!-- Version is provided by org.springframework.boot.spring-boot-dependencies -->
-		<dependency>
-			<groupId>com.github.ben-manes.caffeine</groupId>
-			<artifactId>caffeine</artifactId>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${springdoc.version}</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-to-slf4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${google.guava.version}</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.complexible.stardog/client-http -->
-		<dependency>
-			<groupId>com.complexible.stardog</groupId>
-			<artifactId>client-http</artifactId>
-			<version>${stardog.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.complexible.stardog.jena</groupId>
-			<artifactId>stardog-jena</artifactId>
-			<version>${stardog.version}</version>
-		</dependency>
-
-		<!-- API, java.xml.bind module -->
-		<dependency>
-			<groupId>jakarta.xml.bind</groupId>
-			<artifactId>jakarta.xml.bind-api</artifactId>
-			<version>4.0.0</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-		<dependency>
-		    <groupId>javax.xml.bind</groupId>
-		    <artifactId>jaxb-api</artifactId>
-		    <version>2.3.1</version>
-		</dependency>
-	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>Stardog</id>
-			<name>Stardog Maven Repository</name>
-			<url>https://maven.stardog.com/</url>
-		</repository>
-	</repositories>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>eu.wseresearch.fakequestionansweringsystem.Application</mainClass>
-				</configuration>
-			</plugin>
-			<!-- https://github.com/spotify/dockerfile-maven -->
-			<!-- build Docker image: mvn dockerfile:build  -->
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>${dockerfile-maven-version}</version>
-				<executions>
-					<execution>
-						<id>default</id>
-						<goals>
-							<goal>build</goal>
-							<goal>push</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>default-2</id>
-						<goals>
-							<goal>tag</goal>
-							<goal>push</goal>
-						</goals>
-						<configuration>
-							<tag>latest</tag>
-						</configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<repository>${docker.image.prefix}/${docker.image.name}</repository>
-					<tag>${project.version}</tag>
-					<buildArgs>
-						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>eu.wseresearch.fakequestionansweringsystem.Application</mainClass>
+                </configuration>
+            </plugin>
+            <!-- https://github.com/spotify/dockerfile-maven -->
+            <!-- build Docker image: mvn dockerfile:build  -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${dockerfile-maven-version}</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-2</id>
+                        <goals>
+                            <goal>tag</goal>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <tag>latest</tag>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>${docker.image.prefix}/${docker.image.name}</repository>
+                    <tag>${project.version}</tag>
+                    <buildArgs>
+                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
