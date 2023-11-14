@@ -32,6 +32,7 @@ public class FakeQuestionAnsweringSystem {
     private final Random r = new Random();
     private final String knowledgebase = "";
     private final String user;
+    private final int maxRows;
 
     private String FILENAME_GET_ALL_DATASETS = "/queries/select_dataset_labels.rq";
     private String FILENAME_GET_DATASET_BY_NAME = "/queries/select_dataset_by_name.rq";
@@ -44,10 +45,12 @@ public class FakeQuestionAnsweringSystem {
 
     public FakeQuestionAnsweringSystem(
             @Autowired TripleStoreConnector tripleStoreConnector,
-            @Value("${qado.question.user}") String user
+            @Value("${qado.question.user}") String user,
+            @Value("${qado.resultset.maxrows}") String resultSetMaxRows
     ) {
         this.tripleStoreConnector = tripleStoreConnector;
         this.user = user;
+        this.maxRows = Integer.parseInt(resultSetMaxRows);
 
         TripleStoreConnector.guardNonEmptyFileFromResources(FILENAME_GET_ALL_DATASETS);
         TripleStoreConnector.guardNonEmptyFileFromResources(FILENAME_GET_DATASET_BY_NAME);
@@ -146,7 +149,9 @@ public class FakeQuestionAnsweringSystem {
 
         // set limit for results
         if (numberOfResultsItems == null || numberOfResultsItems == 0) {
-            limit = this.getMaxNumberOfItems(questionText, language);
+            int allRows = this.getMaxNumberOfItems(questionText, language);
+
+            limit = Math.min(allRows, this.maxRows);
         } else {
             limit = numberOfResultsItems - 1;
         }

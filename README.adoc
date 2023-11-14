@@ -5,17 +5,40 @@ This is a System that fakes a questn ansering system.
 
 ## Configuration
 Before you can start the system you have to configure the following properties in the application.properties file.
-```
-qado.triplestore.url=
-qado.triplestore.database=
-qado.triplestore.username=
-qado.triplestore.password=
-```
-* qado.triplestore.url: The url of the triplestore. For example: http://localhost:7200
-* qado.triplestore.database: The name of the database in the triplestore. For example: qado
-* qado.triplestore.username: The username of the triplestore. For example: admin
-* qado.triplestore.password: The password of the triplestore. For example: admin
 
+### Tripestore
+
+```
+qado.resultset.maxrows=10000
+```
+* qado.resultset.maxrows: The maximum number of rows that the system will return. If the database can only
+handle less than 10.000 rows you should change this value.
+
+#### Stardog
+```
+stardog.url=
+stardog.database=
+stardog.username=
+stardog.password=
+```
+* stardog.url: The url of the triplestore. For example: http://localhost:7200
+* stardog.database: The name of the database in the triplestore. For example: qado
+* stardog.username: The username of the triplestore. For example: admin
+* stardog.password: The password of the triplestore. For example: admin
+
+#### Virtuoso
+```
+virtuoso.url=
+virtuoso.graph=
+virtuoso.username=
+virtuoso.password=
+```
+* virtuoso.url: The url of the triplestore. For example: http://localhost:7200
+* virtuoso.graph: The name of the graph in the triplestore. For example: urn:bulkload:general
+* virtuoso.username: The username of the triplestore. For example: admin
+* virtuoso.password: The password of the triplestore. For example: admin
+
+### more options
 You can change the following properties in the application.properties file if necessary.
 ```
 qado.question.knowledgebase=wikidata

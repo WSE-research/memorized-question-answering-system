@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-@ConditionalOnProperty(name = {"qado.triplestore.url", "qado.triplestore.database", "qado.triplestore.username", "qado.triplestore.password"}, matchIfMissing = false)
+@ConditionalOnProperty(name = {"stardog.url", "stardog.database", "stardog.username", "stardog.password"}, matchIfMissing = false)
 @Component
 public class TripleStoreConnectorStardog extends TripleStoreConnector {
     private static final Logger LOGGER = LoggerFactory.getLogger(TripleStoreConnectorStardog.class);
@@ -39,10 +39,10 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
     private ConnectionPool connectionPool;
 
     public TripleStoreConnectorStardog(
-            @Value("${qado.triplestore.url}") URI url,//
-            @Value("${qado.triplestore.database}") String database, //
-            @Value("${qado.triplestore.username}") String username, //
-            @Value("${qado.triplestore.password}") String password, //
+            @Value("${stardog.url}") URI url,//
+            @Value("${stardog.database}") String database, //
+            @Value("${stardog.username}") String username, //
+            @Value("${stardog.password}") String password, //
             @Autowired CacheManager cacheManager //
     ) {
         this.url = url;
@@ -80,11 +80,11 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
     @Override
     public ResultSet select(String sparql) throws SparqlQueryFailed {
         try {
-            if (this.cacheManager == null) {
+            if (this.cacheManager == null || this.cacheManager.getCache(CacheConfig.CACHENAME) == null) {
                 return execSelect(sparql);
             }
 
-            return execSelectWithCache(sparql);
+            return execSelectWithCache(sparql, this.cacheManager.getCache(CacheConfig.CACHENAME));
         } catch (Exception e) {
             throw new SparqlQueryFailed(sparql, this.url.toString() + this.database, e);
         }
@@ -122,30 +122,29 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
         }
     }
 
-    private ResultSet execSelectWithCache(String sparql) throws SparqlQueryFailed {
-        Cache cache = this.cacheManager.getCache(CacheConfig.CACHENAME);
+     private ResultSet execSelectWithCache(String sparql, Cache cache) throws SparqlQueryFailed {
         int hashCode = Objects.hash(sparql.hashCode());
-
-        // TODO check if cache is not null
 
         if (cache.get(hashCode) != null) {
             LOGGER.info("Cache hit for HashCode: {}", hashCode);
 
             ResultSetRewindable rsrw = cache.get(hashCode, ResultSetRewindable.class);
 
-            // TODO check rsrw is not null
+            if (rsrw != null) {
+                rsrw.reset();
 
-            rsrw.reset();
-
-            return rsrw;
-        } else {
-            LOGGER.info("Cache miss for HashCode: {}", hashCode);
-
-            ResultSet rs = this.execSelect(sparql);
-            ResultSetRewindable rsrw = ResultSetFactory.makeRewindable(rs);
-            cache.put(hashCode, rsrw);
-
-            return rsrw;
+                return rsrw;
+            } else {
+                LOGGER.warn("Cache hit for HashCode: {} but ResultSetRewindable is null", hashCode);
+            }
         }
+
+        LOGGER.info("Cache miss for HashCode: {}", hashCode);
+
+        ResultSet rs = this.execSelect(sparql);
+        ResultSetRewindable rsrw = ResultSetFactory.makeRewindable(rs);
+        cache.put(hashCode, rsrw);
+
+        return rsrw;
     }
 }

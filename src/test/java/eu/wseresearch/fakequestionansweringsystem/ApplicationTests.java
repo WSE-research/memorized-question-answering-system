@@ -4,19 +4,19 @@ import eu.wseresearch.fakequestionansweringsystem.triplestoreconnector.TripleSto
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class ApplicationTests {
+	@MockBean
 	TripleStoreConnector tripleStoreConnector;
 	FakeQuestionAnsweringSystem fakeQuestionAnsweringSystem;
 
 	public ApplicationTests(
-			@Autowired TripleStoreConnector tripleStoreConnector,
 			@Autowired FakeQuestionAnsweringSystem fakeQuestionAnsweringSystem
 	) {
-		this.tripleStoreConnector = tripleStoreConnector;
 		this.fakeQuestionAnsweringSystem = fakeQuestionAnsweringSystem;
 	}
 
