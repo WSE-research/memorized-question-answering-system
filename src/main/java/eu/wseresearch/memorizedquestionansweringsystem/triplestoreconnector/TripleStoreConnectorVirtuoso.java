@@ -103,7 +103,7 @@ public class TripleStoreConnectorVirtuoso extends TripleStoreConnector {
         int numberOfReconnectingTries = 0;
         while (this.maxTriesConnectionTimeout > numberOfReconnectingTries) {
             try {
-                connection = new VirtGraph(this.getVirtuosoUrl(), this.getUsername(), this.getPassword());
+                connection = new VirtGraph(this.getVirtuosoGraph(), this.getVirtuosoUrl(), this.getUsername(), this.getPassword());
                 connection.setQueryTimeout(getTimeout());
                 LOGGER.info("Virtuoso server connected at {}", this.getVirtuosoUrl());
                 return;
