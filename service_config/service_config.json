@@ -3,7 +3,7 @@
     {
       "mode": "dockerfile",
       "port": "40165:40100",
-      "image": "wseresearch/fake-question-answering-system",
+      "image": "wseresearch/memorized-question-answering-system",
       "tag": "latest",
       "files": {
         ".env": ".env"
@@ -11,6 +11,6 @@
     }
   ],
   "ids": {
-    "0": "wseresearch-fake-question-answering-system"
+    "0": "wseresearch-memorized-question-answering-system"
   }
 }

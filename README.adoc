@@ -1,7 +1,8 @@
 :server: http://demos.swe.htwk-leipzig.de:40165
 
-= Fake Question Answering System
-This is a System that fakes a questn ansering system.
+= Memorized Question Answering System
+
+This is a System that used memorized queries to simulate a question answering system.
 
 ## Configuration
 Before you can start the system you have to configure the following properties in the application.properties file.
@@ -48,7 +49,7 @@ qado.question.user=open
 * qado.question.user: The user that is used to answer the questions. For example: open
 
 ## How to ask a question
-You can ask a question by sending a POST request to the following url: `{server}/fake-question-answering-system`.
+You can ask a question by sending a POST request to the following url: `{server}/mem-qa-system`.
 The body of the request should contain a JSON object with the following properties:
 
 * question: (required) The question that you want to ask. It musst be a question in the QADO dataset.

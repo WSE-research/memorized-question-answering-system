@@ -2,7 +2,7 @@ name: Docker Image CI
 
 env:
   DOCKER_ORGANISATION_NAME: wseresearch
-  DOCKER_IMAGE_NAME: fake-question-answering-system
+  DOCKER_IMAGE_NAME: memorized-question-answering-system
 
 on:
   push:
