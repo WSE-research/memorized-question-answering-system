@@ -5,7 +5,7 @@
 
     <groupId>eu.wse-research</groupId>
     <artifactId>memorized-question-answering-system</artifactId>
-    <version>0.5.0</version>
+    <version>0.5.2</version>
     <name>MemorizedQuestionAnsweringSystem</name>
 
     <parent>

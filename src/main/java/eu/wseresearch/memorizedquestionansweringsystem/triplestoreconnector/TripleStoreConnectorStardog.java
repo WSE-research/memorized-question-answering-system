@@ -47,7 +47,8 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
             @Value("${stardog.minPool:0}") int minPool, // default from docs
             @Value("${stardog.maxPool:1000}") int maxPool, // default from docs
             @Value("${stardog.expirationTime:60}") int expirationTime, // expiration time in seconds
-            @Value("${stardog.blockCapacityTime:5}") int blockCapacityTime // block wait time in seconds
+            @Value("${stardog.blockCapacityTime:5}") int blockCapacityTime, // block wait time in seconds
+            @Autowired CacheManager cacheManager //
     ) {
         this.url = url;
         this.username = username;
@@ -58,6 +59,7 @@ public class TripleStoreConnectorStardog extends TripleStoreConnector {
         this.maxPool = maxPool;
         this.expirationTime = expirationTime;
         this.blockCapacityTime = blockCapacityTime;
+        this.cacheManager = cacheManager;
         LOGGER.debug(
                 "Stardog Connection initialized: url:{}, username:{}, password:{}, database:{}, reasoningType:{}, minPool:{}, maxPool:{}, expirationTime:{}s, blockCapacityTime:{}s",
                 url, username, password, database, reasoningType, minPool, maxPool, expirationTime, blockCapacityTime
