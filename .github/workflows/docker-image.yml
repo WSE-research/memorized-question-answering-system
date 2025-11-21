@@ -24,7 +24,7 @@ jobs:
     steps:
 #      Clone this repository
       - name: Check out this repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
 #      Setup Java
       - name: Set up JDK 11
