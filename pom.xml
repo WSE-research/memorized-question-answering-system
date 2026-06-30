@@ -11,20 +11,33 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.13</version>
+        <version>4.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <stardog.version>[8.0.0,9.0.0)</stardog.version>
-        <springdoc.version>1.8.0</springdoc.version>
+        <springdoc.version>3.0.3</springdoc.version>
         <log4j.version>2.26.0</log4j.version>
         <google.guava.version>[32.0.0,)</google.guava.version>
         <docker.image.prefix>wseresearch</docker.image.prefix>
         <docker.image.name>memorized-question-answering-system</docker.image.name>
         <dockerfile-maven-version>1.4.13</dockerfile-maven-version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- The stardog client pulls jsr305 at several versions (3.0.0/3.0.2);
+                 pin one so Spring Boot 4's stricter surefire classpath has no
+                 duplicate key. -->
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
@@ -71,10 +84,11 @@
             <artifactId>caffeine</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
+        <!-- Spring Boot 3+/4 uses the springdoc 2.x/3.x starter artifact (the old
+             springdoc-openapi-ui 1.x targets Spring Boot 2 / javax). -->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
 
@@ -124,12 +138,6 @@
             <version>4.0.5</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-        </dependency>
     </dependencies>
 
     <repositories>
