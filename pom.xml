@@ -18,12 +18,12 @@
     <properties>
         <java.version>11</java.version>
         <stardog.version>[8.0.0,9.0.0)</stardog.version>
-        <springdoc.version>1.6.11</springdoc.version>
-        <log4j.version>2.20.0</log4j.version>
+        <springdoc.version>1.8.0</springdoc.version>
+        <log4j.version>2.26.0</log4j.version>
         <google.guava.version>[32.0.0,)</google.guava.version>
         <docker.image.prefix>wseresearch</docker.image.prefix>
         <docker.image.name>memorized-question-answering-system</docker.image.name>
-        <dockerfile-maven-version>1.4.10</dockerfile-maven-version>
+        <dockerfile-maven-version>1.4.13</dockerfile-maven-version>
     </properties>
 
     <dependencies>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>4.0.0</version>
+            <version>4.0.5</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
