@@ -59,7 +59,63 @@ public class TripleStoreConnectorVirtuoso extends TripleStoreConnector {
         this.password = password;
         this.queryTimeout = queryTimeout;
         this.cacheManager = cacheManager;
-        this.connect();
+
+        // A missing configuration is a real error that will not fix itself, so it has to
+        // stop the application. An unreachable triplestore is not: it comes back, and
+        // taking the whole component down for it means a restart loop that only ends when
+        // somebody notices. So the component starts and (re)connects when it is used.
+        this.validateConfiguration();
+
+        try {
+            this.initConnection();
+        } catch (RuntimeException e) {
+            LOGGER.error(
+                    "Virtuoso at {} is not reachable yet ({}). The component starts anyway and "
+                            + "connects on the first request; requests fail until the triplestore answers.",
+                    this.getVirtuosoUrl(), e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * a configuration that cannot work has to stop the application immediately
+     * <p>
+     * this used to be a series of assert statements, which are disabled unless the JVM is
+     * started with -ea (the Dockerfile does not), so they never checked anything
+     */
+    private void validateConfiguration() {
+        requireConfigured(this.virtuosoUrl, "virtuoso.url");
+        requireConfigured(this.virtuosoGraph, "virtuoso.graph");
+        requireConfigured(this.username, "virtuoso.username");
+        requireConfigured(this.password, "virtuoso.password");
+
+        if (this.getTimeout() <= 0) {
+            throw new IllegalStateException("virtuoso.query.timeout has to be greater than 0, but was " + this.getTimeout());
+        }
+    }
+
+    private static void requireConfigured(String value, String property) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalStateException("required property " + property + " is not configured");
+        }
+    }
+
+    /**
+     * ensure there is a connection before a query is executed, so that a triplestore which
+     * was unavailable at startup (or vanished in between) is picked up again
+     *
+     * @param sparql the query that is about to be executed, for the error message
+     */
+    private void ensureConnected(String sparql) throws SparqlQueryFailed {
+        if (this.connection != null) {
+            return;
+        }
+
+        try {
+            this.initConnection();
+        } catch (RuntimeException e) {
+            throw new SparqlQueryFailed(sparql, this.virtuosoUrl, e);
+        }
     }
 
     public String getVirtuosoUrl() {
@@ -85,12 +141,8 @@ public class TripleStoreConnectorVirtuoso extends TripleStoreConnector {
     @Override
     public void connect() {
         LOGGER.debug("Virtuoso server connecting to {}", this.getVirtuosoUrl());
-        assert this.virtuosoUrl != null && !"".equals(this.virtuosoUrl);
-        assert this.username != null && !"".equals(this.username);
-        assert this.password != null && !"".equals(this.password);
-        assert this.getTimeout() > 0;
+        this.validateConfiguration();
         this.initConnection();
-        assert connection != null;
     }
 
     private void initConnection() {
@@ -133,6 +185,7 @@ public class TripleStoreConnectorVirtuoso extends TripleStoreConnector {
 
     @Override
     public void update(String sparql, URI graph) throws SparqlQueryFailed {
+        this.ensureConnected(sparql);
         short numberOfTries = 0;
         // try N times if there was a timeout
         while (numberOfTries < this.maxTriesConnectionTimeout || numberOfTries == 0) {
@@ -172,6 +225,7 @@ public class TripleStoreConnectorVirtuoso extends TripleStoreConnector {
 
     @Override
     public boolean ask(String sparql) throws SparqlQueryFailed {
+        this.ensureConnected(sparql);
         short numberOfTries = 0;
         // try N times if there was a timeout
         while (numberOfTries < this.maxTriesConnectionTimeout || numberOfTries == 0) {
@@ -212,6 +266,7 @@ public class TripleStoreConnectorVirtuoso extends TripleStoreConnector {
 
     @Override
     public ResultSet select(String sparql, boolean noCache) throws SparqlQueryFailed {
+        this.ensureConnected(sparql);
         try {
             if (noCache || this.cacheManager == null || this.cacheManager.getCache(CacheConfig.CACHENAME) == null) {
                 return execSelect(sparql);
