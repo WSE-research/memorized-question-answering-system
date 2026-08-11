@@ -18,7 +18,7 @@
     <properties>
         <java.version>17</java.version>
         <stardog.version>[8.0.0,9.0.0)</stardog.version>
-        <springdoc.version>3.0.3</springdoc.version>
+        <springdoc.version>3.1.0</springdoc.version>
         <log4j.version>2.26.1</log4j.version>
         <google.guava.version>[32.0.0,)</google.guava.version>
         <docker.image.prefix>wseresearch</docker.image.prefix>
